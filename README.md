@@ -1,31 +1,10 @@
-# Soldered NAZIV PROIZVODA ESPHome Component
+# Soldered BMP180 ESPHome Component
 
-| ![Product name](https://upload.wikimedia.org/wikipedia/commons/8/8f/Example_image.svg) |
-| :------------------------------------------------------------------------------------: |
-|                      [NAZIV PROIZVODA](https://www.solde.red/SKU)                      |
+| ![Pressure & temperature sensor BMP180 breakout](https://soldered.com/cdn/shop/files/333060_featured-photo_70581e_3ec34161-1c04-4f2b-b780-f5809f582bcf.jpg) |
+| :---: |
+| [Pressure & temperature sensor BMP180 breakout](https://www.solde.red/333060) |
 
-OPIS PROIZVODA + LINK NA [Qwiic ecosystem](https://soldered.com/collections/qwiic-ecosystem).
-
-External ESPHome component for NAZIV PROIZVODA.
-
-### Using the template
-
-Before publishing a new component make sure to replace:
-
-- `NAZIV PROIZVODA`, `OPIS PROIZVODA`, product image, and SKU link in this README
-- the `components/soldered_esphome_component_template/` directory name with the real component name
-- `soldered_esphome_component_template` namespace, `SolderedEsphomeComponentTemplate` class name, and `CODEOWNERS` in `__init__.py`, matching names in the `.h`/`.cpp` files and their `#include`
-- `CONFIG_SCHEMA` and `to_code()` in `__init__.py` with the real config options and codegen
-- the `TAG` string and `dump_config()` output in the `.cpp` file
-- `github://SolderedElectronics/<repo>` source path and the sample config in the "Usage" section below
-- `examples/basic.yaml` (rename/add examples as needed, keep `external_components.source.path` pointing at `../components`)
-- `@file`, `@brief`, `@author` Doxygen comments in the `.h`/`.cpp` files to describe the real API
-
-Also make sure to add more examples if the component supports multiple boards/modes (see `Soldered-Inkplate-ESPHome` for a repo with several board variants).
-
-Run `pip install clang-format==13.0.1 && find components -name "*.cpp" -o -name "*.h" | xargs clang-format -i` before committing to auto-format the component against ESPHome's own style (`.clang-format`, copied from the ESPHome core repo). CI runs the same check on every push/PR via `.github/workflows/format_check.yml` and fails on unformatted code. `.github/workflows/build.yml` compiles every YAML under `examples/` on every push/PR.
-
-**Remove this section of README after everything is done!**
+The BMP180 is a Bosch barometric pressure and temperature sensor: 300 to 1100 hPa with 0.01 hPa resolution, and temperature with 0.1 °C resolution. Since pressure falls with height, it can also estimate altitude. The board uses I2C at the fixed address 0x77 and connects with an easyC/Qwiic cable, see the [Qwiic ecosystem](https://soldered.com/collections/qwiic-ecosystem).
 
 ## Repository Contents
 
@@ -38,17 +17,38 @@ Reference this repo directly from your own ESPHome YAML (no need to clone it loc
 
 ```yaml
 external_components:
-  - source: github://SolderedElectronics/<repo>
-    components: [soldered_esphome_component_template]
+  - source: github://SolderedElectronics/Soldered-BMP180-ESPHome-Component
+    components: [bmp180]
 
-soldered_esphome_component_template:
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+
+sensor:
+  - platform: bmp180
+    update_interval: 10s
+    temperature:
+      name: "BMP180 Temperature"
+    pressure:
+      name: "BMP180 Pressure"
 ```
 
 See [`examples/basic.yaml`](examples/basic.yaml) for a full working example.
 
+### Configuration variables
+
+- **update_interval** (*Optional*, [Time](https://esphome.io/guides/configuration-types#config-time)): how often the
+  values are published. Defaults to `60s`.
+- **oversampling** (*Optional*, int): pressure oversampling setting, `0` (1 sample, 5 ms) to `3` (8 samples, 26 ms).
+  Higher is slower but less noisy. Defaults to `3`.
+- **temperature** (*Optional*): [Sensor](https://esphome.io/components/sensor/) publishing temperature in °C.
+- **pressure** (*Optional*): [Sensor](https://esphome.io/components/sensor/) publishing absolute pressure in hPa.
+
+The I2C address is fixed at `0x77` on the BMP180.
+
 ### Hardware design
 
-You can find hardware design for this board in the _NAZIV PROIZVODA_ hardware repository.
+You can find hardware design for this board in the Pressure & temperature sensor BMP180 breakout hardware repository.
 
 ### Documentation
 

@@ -1,8 +1,11 @@
+# Reads temperature and pressure from the Soldered BMP180 breakout board
+# once per update_interval.
+
 esphome:
-  name: soldered-esphome-component-template-test
+  name: bmp180-basic
 
 esp32:
-  board: esp32-s3-devkitc-1
+  board: esp32dev
   framework:
     type: esp-idf
 
@@ -13,6 +16,18 @@ external_components:
   - source:
       type: local
       path: ../components
-    components: [soldered_esphome_component_template]
+    components: [bmp180]
 
-soldered_esphome_component_template:
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+
+sensor:
+  - platform: bmp180
+    update_interval: 5s
+    oversampling: 3
+    temperature:
+      name: "BMP180 Temperature"
+    pressure:
+      name: "BMP180 Pressure"

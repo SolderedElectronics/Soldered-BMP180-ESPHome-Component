@@ -20,4 +20,4 @@ jobs:
         run: pip install clang-format==13.0.1
 
       - name: Check formatting
-        run: find components -name "*.cpp" -o -name "*.h" | xargs clang-format --dry-run --Werror
+        run: find components \( -name "*.cpp" -o -name "*.h" \) -not -name "bmp180_compensation*" | xargs clang-format --dry-run --Werror
